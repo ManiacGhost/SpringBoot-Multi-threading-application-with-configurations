@@ -9,12 +9,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AddressDto {
-    private String street;
-    private String city;
-    private String state;
-    private String zipCode;
-    private String country;
-
+public class PaymentDtoV1 {
+    private String paymentId;
+    private String paymentMethod;
+    private String transactionId;
+    private Double paidAmount;
+    private Boolean paymentConfirmed;
 }
-

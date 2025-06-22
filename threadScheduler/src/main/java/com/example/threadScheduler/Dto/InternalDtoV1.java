@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class InternalOrderDto {
+public class InternalDtoV1 {
     private String orderId;
     private String customerId;
     private String orderDate;

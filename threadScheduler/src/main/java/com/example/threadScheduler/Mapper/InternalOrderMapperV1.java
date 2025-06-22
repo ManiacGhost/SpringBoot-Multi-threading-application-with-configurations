@@ -1,7 +1,14 @@
 package com.example.threadScheduler.Mapper;
 
-import com.example.threadScheduler.Dto.*;
-import org.mapstruct.*;
+import com.example.threadScheduler.Dto.InternalDtoV1;
+import com.example.threadScheduler.Dto.ItemDtoV1;
+import com.example.threadScheduler.Dto.OrderDtoV1;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
+
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
@@ -9,8 +16,6 @@ import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface InternalOrderMapperV1 {
-
-    InternalOrderMapperV1 INSTANCE = Mappers.getMapper(InternalOrderMapperV1.class);
 
     @Mapping(target = "shippingStreet", source = "shippingAddress.street")
     @Mapping(target = "shippingCity", source = "shippingAddress.city")
@@ -33,43 +38,42 @@ public interface InternalOrderMapperV1 {
     @Mapping(target = "itemQuantities", expression = "java(flattenItemQuantities(orderDto.getItems()))")
     @Mapping(target = "itemPrices", expression = "java(flattenItemPrices(orderDto.getItems()))")
     @Mapping(target = "totalItemValue", expression = "java(computeTotalValue(orderDto.getItems()))")
-    InternalOrderDto mapToInternal(OrderDto orderDto);
+    List<InternalDtoV1> toDtoList(List<OrderDtoV1> dto);
 
-    // Flattening helper methods
-
-    default String flattenItemIds(List<ItemDto> items) {
+    default String flattenItemIds(List<ItemDtoV1> items) {
         return items == null ? null : items.stream()
-                .map(ItemDto::getItemId)
+                .map(ItemDtoV1::getItemId)
                 .collect(Collectors.joining(","));
     }
 
-    default String flattenItemNames(List<ItemDto> items) {
+    default String flattenItemNames(List<ItemDtoV1> items) {
         return items == null ? null : items.stream()
-                .map(ItemDto::getItemName)
+                .map(ItemDtoV1::getItemName)
                 .collect(Collectors.joining(","));
     }
 
-    default String flattenItemCategories(List<ItemDto> items) {
+    default String flattenItemCategories(List<ItemDtoV1> items) {
         return items == null ? null : items.stream()
-                .map(ItemDto::getCategory)
+                .map(ItemDtoV1::getCategory)
                 .collect(Collectors.joining(","));
     }
 
-    default String flattenItemQuantities(List<ItemDto> items) {
+    default String flattenItemQuantities(List<ItemDtoV1> items) {
         return items == null ? null : items.stream()
                 .map(i -> String.valueOf(i.getQuantity()))
                 .collect(Collectors.joining(","));
     }
 
-    default String flattenItemPrices(List<ItemDto> items) {
+    default String flattenItemPrices(List<ItemDtoV1> items) {
         return items == null ? null : items.stream()
                 .map(i -> String.valueOf(i.getPrice()))
                 .collect(Collectors.joining(","));
     }
 
-    default Double computeTotalValue(List<ItemDto> items) {
+    default Double computeTotalValue(List<ItemDtoV1> items) {
         return items == null ? 0.0 : items.stream()
                 .mapToDouble(i -> i.getPrice() * i.getQuantity())
                 .sum();
     }
 }
+

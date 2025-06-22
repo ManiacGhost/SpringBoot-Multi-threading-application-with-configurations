@@ -1,6 +1,5 @@
 package com.example.threadScheduler.Dto;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,16 +11,16 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OrderDto {
+public class OrderDtoV1 {
     private String orderId;
     private String customerId;
     private String orderDate;
     private String status;
     private Double totalAmount;
-    private AddressDto shippingAddress;
-    private AddressDto billingAddress;
-    private List<ItemDto> items;
-    private PaymentDto paymentDetails;
+    private AddressDtoV1 shippingAddress;
+    private AddressDtoV1 billingAddress;
+    private List<ItemDtoV1> items;
+    private PaymentDtoV1 paymentDetails;
     private String deliveryDate;
     private String createdBy;
     private String updatedBy;

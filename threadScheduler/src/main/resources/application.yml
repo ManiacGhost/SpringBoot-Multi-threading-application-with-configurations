@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: threadScheduler
+  jpa:
+    hibernate:
+      ddl-auto: update
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+      format_sql: true
+      jdbc:
+        lob:
+          non_contextual_creation: true
+    show-sql: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ThreadScheduler?currentSchema=order_schema
+    username: postgres
+    password: root
+    driver-class-name: org.postgresql.Driver

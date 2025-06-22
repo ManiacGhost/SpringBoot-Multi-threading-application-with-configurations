@@ -5,14 +5,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PaymentDto {
-    private String paymentId;
-    private String paymentMethod;
-    private String transactionId;
-    private Double paidAmount;
-    private Boolean paymentConfirmed;
+public class AddressDtoV1 {
+    private String street;
+    private String city;
+    private String state;
+    private String zipCode;
+    private String country;
+
 }
