@@ -2,6 +2,7 @@ package com.example.threadScheduler.Controller;
 
 import com.example.threadScheduler.Dto.ApiResponseDtoV1;
 import com.example.threadScheduler.Dto.OrderDtoV1;
+import com.example.threadScheduler.Dto.OrderRequestDtoV1;
 import com.example.threadScheduler.Service.CommonServiceImpl.CommonService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -64,12 +65,13 @@ public class OrderControllerV1 {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/read/{orderId}")
-    public ResponseEntity<ApiResponseDtoV1> getOrderDetails(@PathVariable String orderId){
+    @PostMapping("/read")
+    public ResponseEntity<ApiResponseDtoV1> getOrderDetails(
+            @RequestBody OrderRequestDtoV1 requestDtoV1){
 
         ApiResponseDtoV1 response = new ApiResponseDtoV1();
         try{
-            response = commonService.getOrderDetails(orderId);
+            response = commonService.getOrderDetails(requestDtoV1.getOrderId());
             if(response.getStatus() == null || response.getStatus().isEmpty()){
                 response.setStatus("EXCEPTION");
                 response.setStatusMessage("Failed to fetch order details");
