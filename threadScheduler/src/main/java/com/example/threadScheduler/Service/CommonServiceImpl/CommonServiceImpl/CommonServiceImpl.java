@@ -28,9 +28,11 @@ public class CommonServiceImpl implements CommonService {
     public ApiResponseDtoV1 saveOrderDetails(List<OrderDtoV1> orderDtoV1) {
         ApiResponseDtoV1 apiResponseDtoV1 = new ApiResponseDtoV1();
         try{
+
             List<InternalDtoV1> internalDto = internalOrderMapper.toDtoList(orderDtoV1);
             List<InternalOrderEntityV1> mappedEntities = internalDtoToEntityMapper.mapToInternalOrderEntityV1(internalDto);
             if(!internalDto.isEmpty()){
+                mappedEntities.forEach(order -> order.setActive(true));
                 List<InternalOrderEntityV1> savedInternalDto = internalOrderRepositoryV1.saveAll(mappedEntities);
                 if(!savedInternalDto.isEmpty()){
                     apiResponseDtoV1.setStatus(HttpStatus.OK.toString());
@@ -60,7 +62,7 @@ public class CommonServiceImpl implements CommonService {
 
             if (orderOptional.isPresent()) {
                 InternalOrderEntityV1 order = orderOptional.get();
-                order.setDeleted(true);  // Soft delete
+                order.setActive(false);  // Soft delete
                 internalOrderRepositoryV1.save(order);
 
                 apiResponseDtoV1.setStatus(HttpStatus.OK.toString());
