@@ -98,4 +98,7 @@ public class InternalOrderEntityV1 {
 
     @Column(name = "total_item_value")
     private Double totalItemValue;
+
+    @Column(name = "is_deleted")
+    private boolean deleted = false;
 }

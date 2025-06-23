@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -52,5 +53,32 @@ public class CommonServiceImpl implements CommonService {
         }
         return apiResponseDtoV1;
     }
+    public ApiResponseDtoV1 deleteOrderDetails(String orderId) {
+        ApiResponseDtoV1 apiResponseDtoV1 = new ApiResponseDtoV1();
+        try {
+            Optional<InternalOrderEntityV1> orderOptional = internalOrderRepositoryV1.findById(orderId);
+
+            if (orderOptional.isPresent()) {
+                InternalOrderEntityV1 order = orderOptional.get();
+                order.setDeleted(true);  // Soft delete
+                internalOrderRepositoryV1.save(order);
+
+                apiResponseDtoV1.setStatus(HttpStatus.OK.toString());
+                apiResponseDtoV1.setStatusMessage("Order soft-deleted successfully");
+                apiResponseDtoV1.setOrderId(orderId);
+            } else {
+                apiResponseDtoV1.setStatus(HttpStatus.NOT_FOUND.toString());
+                apiResponseDtoV1.setStatusMessage("Order not found");
+            }
+
+        } catch (Exception e) {
+            log.error("Error while soft-deleting order details: {}", e.getMessage());
+            apiResponseDtoV1.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.toString());
+            apiResponseDtoV1.setStatusMessage("Error occurred: " + e.getMessage());
+        }
+
+        return apiResponseDtoV1;
+    }
+
 
 }

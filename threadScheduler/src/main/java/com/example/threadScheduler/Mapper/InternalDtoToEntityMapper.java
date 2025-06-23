@@ -39,7 +39,5 @@ public interface InternalDtoToEntityMapper {
     @Mapping(target = "itemQuantities", source = "itemQuantities")
     @Mapping(target = "itemPrices", source = "itemPrices")
     @Mapping(target = "totalItemValue", source = "totalItemValue")
-    InternalOrderEntityV1 mapToInternalOrderEntityV1(InternalDtoV1 dto);
-
     List<InternalOrderEntityV1> mapToInternalOrderEntityV1(List<InternalDtoV1> dtos);
 }
