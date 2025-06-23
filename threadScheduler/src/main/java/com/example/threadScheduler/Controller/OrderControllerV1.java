@@ -46,11 +46,11 @@ public class OrderControllerV1 {
 
     @PostMapping("/delete")
     public ResponseEntity<ApiResponseDtoV1> deleteOrderDetails(
-            @RequestBody(required = true) Long orderId)
+            @RequestBody(required = true) String orderId)
     {
         ApiResponseDtoV1 response = new ApiResponseDtoV1();
         try{
-            response = commonService.saveOrderDetails(orderDtoV1);
+            response = commonService.deleteOrderDetails(orderId);
             if(response.getStatus() == null || response.getStatus().isEmpty()){
                 response.setStatus("EXCEPTION");
                 response.setStatusMessage("Failed to delete order details");

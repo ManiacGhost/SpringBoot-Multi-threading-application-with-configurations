@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface CommonService {
     ApiResponseDtoV1 saveOrderDetails(List<OrderDtoV1> orderDtoV1);
+    ApiResponseDtoV1 deleteOrderDetails(String orderId);
 }
