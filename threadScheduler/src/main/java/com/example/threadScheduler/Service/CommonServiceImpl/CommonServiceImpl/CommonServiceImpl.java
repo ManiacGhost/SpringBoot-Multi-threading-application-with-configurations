@@ -5,6 +5,7 @@ import com.example.threadScheduler.Dto.InternalDtoV1;
 import com.example.threadScheduler.Dto.OrderDtoV1;
 import com.example.threadScheduler.Entity.InternalOrderEntityV1;
 import com.example.threadScheduler.Mapper.InternalDtoToEntityMapper;
+import com.example.threadScheduler.Mapper.InternalOrderEntityToDtoMapperV1;
 import com.example.threadScheduler.Mapper.InternalOrderMapperV1;
 import com.example.threadScheduler.Repository.InternalOrderRepositoryV1;
 import com.example.threadScheduler.Service.CommonServiceImpl.CommonService;
@@ -24,6 +25,7 @@ public class CommonServiceImpl implements CommonService {
     private final InternalOrderMapperV1 internalOrderMapper;
     private final InternalOrderRepositoryV1 internalOrderRepositoryV1;
     private final InternalDtoToEntityMapper internalDtoToEntityMapper;
+    private final InternalOrderEntityToDtoMapperV1 internalOrderEntityToDtoMapperV1;
 
     public ApiResponseDtoV1 saveOrderDetails(List<OrderDtoV1> orderDtoV1) {
         ApiResponseDtoV1 apiResponseDtoV1 = new ApiResponseDtoV1();
@@ -55,6 +57,7 @@ public class CommonServiceImpl implements CommonService {
         }
         return apiResponseDtoV1;
     }
+
     public ApiResponseDtoV1 deleteOrderDetails(String orderId) {
         ApiResponseDtoV1 apiResponseDtoV1 = new ApiResponseDtoV1();
         try {
@@ -138,6 +141,39 @@ public class CommonServiceImpl implements CommonService {
 
         } catch (Exception e) {
             log.error("Error while updating order details: {}", e.getMessage());
+            apiResponseDtoV1.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.toString());
+            apiResponseDtoV1.setStatusMessage("Error occurred: " + e.getMessage());
+        }
+
+        return apiResponseDtoV1;
+    }
+
+
+    public ApiResponseDtoV1 getOrderDetails(String orderId){
+
+        ApiResponseDtoV1 apiResponseDtoV1 = new ApiResponseDtoV1();
+
+        try{
+
+            Optional<InternalOrderEntityV1> orderDetails = internalOrderRepositoryV1.findById(orderId);
+
+            if(orderDetails.isPresent()){
+
+                InternalOrderEntityV1 order = orderDetails.get();
+
+                apiResponseDtoV1.setOrderId(order.getOrderId());
+                apiResponseDtoV1.setStatus(HttpStatus.OK.toString());
+                apiResponseDtoV1.setStatusMessage("Order details found");
+                apiResponseDtoV1.setData(internalOrderEntityToDtoMapperV1.toOrderDto(order));
+
+            }else{
+
+                apiResponseDtoV1.setStatus(HttpStatus.NOT_FOUND.toString());
+                apiResponseDtoV1.setStatusMessage("Order details not found");
+
+            }
+        } catch (Exception e){
+            log.error("Error while finding order details: {}", e.getMessage());
             apiResponseDtoV1.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.toString());
             apiResponseDtoV1.setStatusMessage("Error occurred: " + e.getMessage());
         }

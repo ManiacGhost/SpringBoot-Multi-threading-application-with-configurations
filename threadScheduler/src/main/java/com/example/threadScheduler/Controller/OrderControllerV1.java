@@ -8,10 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -64,6 +61,30 @@ public class OrderControllerV1 {
                     .build();
             return ResponseEntity.status(HttpStatusCode.valueOf(HttpStatus.BAD_REQUEST.value())).body(response);
         }
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/read/{orderId}")
+    public ResponseEntity<ApiResponseDtoV1> getOrderDetails(@PathVariable String orderId){
+
+        ApiResponseDtoV1 response = new ApiResponseDtoV1();
+        try{
+            response = commonService.getOrderDetails(orderId);
+            if(response.getStatus() == null || response.getStatus().isEmpty()){
+                response.setStatus("EXCEPTION");
+                response.setStatusMessage("Failed to fetch order details");
+            }
+            log.info("Order details fetched successfully with status: {}", response.getStatus());
+        } catch (Exception e){
+            log.error("Error while fetching order details");
+            response = ApiResponseDtoV1.builder()
+                    .status("EXCEPTION")
+                    .statusMessage(e.getMessage())
+                    .build();
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(HttpStatus.BAD_REQUEST.value())).body(response);
+        }
+
         return ResponseEntity.ok(response);
     }
 

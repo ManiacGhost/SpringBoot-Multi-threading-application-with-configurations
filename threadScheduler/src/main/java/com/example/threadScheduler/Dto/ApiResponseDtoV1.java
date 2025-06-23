@@ -16,5 +16,5 @@ public class ApiResponseDtoV1 {
     private String orderId;
     private String statusMessage;
     private String status;
-
+    private OrderDtoV1 data;
 }
