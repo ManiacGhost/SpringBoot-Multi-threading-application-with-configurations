@@ -38,7 +38,10 @@ public interface InternalOrderMapperV1 {
     @Mapping(target = "itemQuantities", expression = "java(flattenItemQuantities(orderDto.getItems()))")
     @Mapping(target = "itemPrices", expression = "java(flattenItemPrices(orderDto.getItems()))")
     @Mapping(target = "totalItemValue", expression = "java(computeTotalValue(orderDto.getItems()))")
-    List<InternalDtoV1> toDtoList(List<OrderDtoV1> dto);
+    InternalDtoV1 toDto(OrderDtoV1 orderDto);
+
+    List<InternalDtoV1> toDtoList(List<OrderDtoV1> dtoList);
+
 
     default String flattenItemIds(List<ItemDtoV1> items) {
         return items == null ? null : items.stream()
