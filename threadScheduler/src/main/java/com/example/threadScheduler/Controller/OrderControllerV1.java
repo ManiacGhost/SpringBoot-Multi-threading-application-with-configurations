@@ -67,4 +67,27 @@ public class OrderControllerV1 {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/update")
+    public ResponseEntity<ApiResponseDtoV1> deleteOrderDetails(
+            @RequestBody(required = true) OrderDtoV1 orderDtoV1)
+    {
+        ApiResponseDtoV1 response = new ApiResponseDtoV1();
+        try{
+            response = commonService.updateOrderDetails(orderDtoV1);
+            if(response.getStatus() == null || response.getStatus().isEmpty()){
+                response.setStatus("EXCEPTION");
+                response.setStatusMessage("Failed to delete order details");
+            }
+            log.info("Order details deleted successfully with status: {}", response.getStatus());
+        }catch(Exception e){
+            log.error("Error while deleting order details: {}", e.getMessage());
+            response = ApiResponseDtoV1.builder()
+                    .status("EXCEPTION")
+                    .statusMessage(e.getMessage())
+                    .build();
+            return ResponseEntity.status(HttpStatusCode.valueOf(HttpStatus.BAD_REQUEST.value())).body(response);
+        }
+        return ResponseEntity.ok(response);
+    }
+
 }

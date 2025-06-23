@@ -81,6 +81,69 @@ public class CommonServiceImpl implements CommonService {
 
         return apiResponseDtoV1;
     }
+    public ApiResponseDtoV1 updateOrderDetails(OrderDtoV1 orderDtoV1)
+    {
+        ApiResponseDtoV1 apiResponseDtoV1 = new ApiResponseDtoV1();
+        try {
+            Optional<InternalOrderEntityV1> orderOptional = internalOrderRepositoryV1.findById(orderDtoV1.getOrderId());
+
+            if (orderOptional.isPresent()) {
+                InternalDtoV1 internalDtoV1=internalOrderMapper.toDto(orderDtoV1);
+                InternalOrderEntityV1 updatedValues = internalDtoToEntityMapper.mapToInternalOrderEntityV1(internalDtoV1);
+
+                InternalOrderEntityV1 order = orderOptional.get();
+
+                order.setCustomerId(updatedValues.getCustomerId());
+                order.setOrderDate(updatedValues.getOrderDate());
+                order.setStatus(updatedValues.getStatus());
+                order.setTotalAmount(updatedValues.getTotalAmount());
+                order.setDeliveryDate(updatedValues.getDeliveryDate());
+                order.setCreatedBy(updatedValues.getCreatedBy());
+                order.setUpdatedBy(updatedValues.getUpdatedBy());
+
+                order.setShippingStreet(updatedValues.getShippingStreet());
+                order.setShippingCity(updatedValues.getShippingCity());
+                order.setShippingState(updatedValues.getShippingState());
+                order.setShippingZipCode(updatedValues.getShippingZipCode());
+                order.setShippingCountry(updatedValues.getShippingCountry());
+
+                order.setBillingStreet(updatedValues.getBillingStreet());
+                order.setBillingCity(updatedValues.getBillingCity());
+                order.setBillingState(updatedValues.getBillingState());
+                order.setBillingZipCode(updatedValues.getBillingZipCode());
+                order.setBillingCountry(updatedValues.getBillingCountry());
+
+                order.setPaymentId(updatedValues.getPaymentId());
+                order.setPaymentMethod(updatedValues.getPaymentMethod());
+                order.setTransactionId(updatedValues.getTransactionId());
+                order.setPaidAmount(updatedValues.getPaidAmount());
+                order.setPaymentConfirmed(updatedValues.getPaymentConfirmed());
+
+                order.setItemIds(updatedValues.getItemIds());
+                order.setItemNames(updatedValues.getItemNames());
+                order.setItemCategories(updatedValues.getItemCategories());
+                order.setItemQuantities(updatedValues.getItemQuantities());
+                order.setItemPrices(updatedValues.getItemPrices());
+                order.setTotalItemValue(updatedValues.getTotalItemValue());
+
+                internalOrderRepositoryV1.save(order);
+
+                apiResponseDtoV1.setStatus(HttpStatus.OK.toString());
+                apiResponseDtoV1.setStatusMessage("Order updated successfully");
+                apiResponseDtoV1.setOrderId(order.getOrderId());
+            } else {
+                apiResponseDtoV1.setStatus(HttpStatus.NOT_FOUND.toString());
+                apiResponseDtoV1.setStatusMessage("Order not found");
+            }
+
+        } catch (Exception e) {
+            log.error("Error while updating order details: {}", e.getMessage());
+            apiResponseDtoV1.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.toString());
+            apiResponseDtoV1.setStatusMessage("Error occurred: " + e.getMessage());
+        }
+
+        return apiResponseDtoV1;
+    }
 
 
 }
