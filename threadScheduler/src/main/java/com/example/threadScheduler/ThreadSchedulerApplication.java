@@ -1,5 +1,7 @@
 package com.example.threadScheduler;
 
+import io.github.cdimascio.dotenv.Dotenv;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -8,6 +10,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
 public class ThreadSchedulerApplication {
+
+	@Value("${CORS_ALLOWED_ORIGIN}")
+	private String frontEndUrl;
 
 	public static void main(String[] args) {
 		SpringApplication.run(ThreadSchedulerApplication.class, args);
@@ -21,7 +26,7 @@ public class ThreadSchedulerApplication {
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**")
 						.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS","PATCH")
-						.allowedOrigins("http://localhost:5173")
+						.allowedOrigins(frontEndUrl)
 						.allowedHeaders("*")
 						.allowCredentials(true);
 			}

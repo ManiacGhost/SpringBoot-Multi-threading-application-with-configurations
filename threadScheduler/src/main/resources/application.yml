@@ -10,8 +10,13 @@ spring:
         lob:
           non_contextual_creation: true
     show-sql: true
+  config:
+    import: optional:file:.env[.properties]
   datasource:
-    url: jdbc:postgresql://localhost:5432/ThreadScheduler?currentSchema=order_schema
-    username: postgres
-    password: root
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: org.postgresql.Driver
+
+cors:
+  allowed-origin: ${CORS_ALLOWED_ORIGIN}
