@@ -65,12 +65,20 @@ public class CommonServiceImpl implements CommonService {
 
             if (orderOptional.isPresent()) {
                 InternalOrderEntityV1 order = orderOptional.get();
-                order.setActive(false);  // Soft delete
-                internalOrderRepositoryV1.save(order);
 
-                apiResponseDtoV1.setStatus(HttpStatus.OK.toString());
-                apiResponseDtoV1.setStatusMessage("Order soft-deleted successfully");
-                apiResponseDtoV1.setOrderId(orderId);
+                if(order.isActive()){
+                    order.setActive(false);  // Soft delete
+                    internalOrderRepositoryV1.save(order);
+
+                    apiResponseDtoV1.setStatus(HttpStatus.OK.toString());
+                    apiResponseDtoV1.setStatusMessage("Order soft-deleted successfully");
+                    apiResponseDtoV1.setOrderId(orderId);
+                }else{
+                    apiResponseDtoV1.setStatus(HttpStatus.NOT_FOUND.toString());
+                    apiResponseDtoV1.setStatusMessage("Order not found");
+                    apiResponseDtoV1.setOrderId(null);
+                }
+
             } else {
                 apiResponseDtoV1.setStatus(HttpStatus.NOT_FOUND.toString());
                 apiResponseDtoV1.setStatusMessage("Order not found");
@@ -161,10 +169,16 @@ public class CommonServiceImpl implements CommonService {
 
                 InternalOrderEntityV1 order = orderDetails.get();
 
-                apiResponseDtoV1.setOrderId(order.getOrderId());
-                apiResponseDtoV1.setStatus(HttpStatus.OK.toString());
-                apiResponseDtoV1.setStatusMessage("Order details found");
-                apiResponseDtoV1.setData(internalOrderEntityToDtoMapperV1.toOrderDto(order));
+                if(order.isActive()){
+                    apiResponseDtoV1.setOrderId(order.getOrderId());
+                    apiResponseDtoV1.setStatus(HttpStatus.OK.toString());
+                    apiResponseDtoV1.setStatusMessage("Order details found");
+                    apiResponseDtoV1.setData(internalOrderEntityToDtoMapperV1.toOrderDto(order));
+                }else{
+                    apiResponseDtoV1.setStatus(HttpStatus.NOT_FOUND.toString());
+                    apiResponseDtoV1.setStatusMessage("Order details not found");
+                    apiResponseDtoV1.setData(null);
+                }
 
             }else{
 
